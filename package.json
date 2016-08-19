@@ -1,0 +1,25 @@
+{
+  "name": "linvo-p2p-sync",
+  "version": "1.0.0",
+  "description": "Syncing between a key-value store and the Linvo API ",
+  "main": "sync.js",
+  "scripts": {
+    "test": "tape test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Ivshti/linvo-p2p-sync.git"
+  },
+  "keywords": [
+    "sync",
+    "linvo",
+    "stremio",
+    "p2p"
+  ],
+  "author": "Ivo Georgiev <ivo@linvo.com> (http://ivogeorgiev.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ivshti/linvo-p2p-sync/issues"
+  },
+  "homepage": "https://github.com/Ivshti/linvo-p2p-sync#readme"
+}
