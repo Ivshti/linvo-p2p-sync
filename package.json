@@ -7,7 +7,7 @@
     "standard": "~8.0.0-beta.5"
   },
   "scripts": {
-    "test": "tape test/*"
+    "test": "standard sync.js; tape test/*"
   },
   "repository": {
     "type": "git",
