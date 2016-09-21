@@ -40,7 +40,7 @@ module.exports = function sync (API, name, all, cb) {
     API.request('datastorePut', { collection: name, changes: push }, cb)
   }
 
-  function doPull () {
+  function doPull (cb) {
     if (!pull.length) return cb()
     API.request('datastoreGet', { collection: name, ids: pull }, cb)
   }
