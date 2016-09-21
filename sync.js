@@ -16,7 +16,7 @@ module.exports = function sync (API, name, all, cb) {
     Object.keys(all).forEach(function (k) {
       var item = all[k]
       var mtime = item._mtime.getTime()
-      if ((remote[item._id] || 0) > mtime) pull.push(item._id)
+      if ((remote[item._id] || 0) > mtime) return // keep it in remote[], therefore we pull
       if ((remote[item._id] || 0) < mtime) push.push(all[item._id])
       delete remote[item._id] // already processed
     })
