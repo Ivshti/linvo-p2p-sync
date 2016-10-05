@@ -7,7 +7,7 @@ module.exports = function sync (API, name, all, cb) {
   var pushed = null
   var pulled = null
 
-  API.request('datastoreMeta', { collection: name }, function (err, metas) {
+  API.request('datastoreMeta', { collection: name, from: "linvo-p2p-sync" }, function (err, metas) {
     if (err) return cb(err)
 
     var remote = { }
