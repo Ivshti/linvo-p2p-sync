@@ -1,13 +1,13 @@
 // API - instance of Linvo API, must have .request method
 // name - name of the model
 // all - dictionary of id -> object; object can only contain _mtime
-module.exports = function sync (API, name, all, cb) {
+module.exports = function sync (API, name, all, params, cb) {
   var push = []
   var pull = []
   var pushed = null
   var pulled = null
 
-  API.request('datastoreMeta', { collection: name, from: "linvo-p2p-sync" }, function (err, metas) {
+  API.request('datastoreMeta', params || { collection: name, from: "linvo-p2p-sync" }, function (err, metas) {
     if (err) return cb(err)
 
     var remote = { }
