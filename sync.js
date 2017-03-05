@@ -30,7 +30,7 @@ module.exports = function sync (API, name, all, params, cb) {
     })
     doPull(function (err, recv) {
       if (err) return cb(err)
-      pulled = recv || true
+      pulled = recv || []
       if (pulled && pushed) cb(null, pulled, { pull: pulled.length, push: pushed.length })
     })
   })
