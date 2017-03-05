@@ -26,12 +26,12 @@ module.exports = function sync (API, name, all, params, cb) {
     doPush(function (err) {
       if (err) return cb(err)
       pushed = true
-      if (pulled && pushed) cb(null, pulled)
+      if (pulled && pushed) cb(null, pulled, { pull: pulled.length, push: pushed.length })
     })
     doPull(function (err, recv) {
       if (err) return cb(err)
       pulled = recv || true
-      if (pulled && pushed) cb(null, pulled)
+      if (pulled && pushed) cb(null, pulled, { pull: pulled.length, push: pushed.length })
     })
   })
 
