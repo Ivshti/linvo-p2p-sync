@@ -1,11 +1,16 @@
 // API - instance of Linvo API, must have .request method
 // name - name of the model
 // all - dictionary of id -> object; object can only contain _mtime
-module.exports = function sync (API, name, all, params, cb) {
-  var push = []
-  var pull = []
+// params - additional things we send to the server
+// opts.
+module.exports = function sync (API, name, all, params, opts, cb) {
   var pushed = null
   var pulled = null
+
+  var plan = { pull: [], push: [] }
+
+  opts = opts || { }
+  opts.planner = opts.planner || planner
 
   API.request('datastoreMeta', params || { collection: name, from: "linvo-p2p-sync" }, function (err, metas) {
     if (err) return cb(err)
@@ -13,6 +18,23 @@ module.exports = function sync (API, name, all, params, cb) {
     var remote = { }
     metas.forEach(function (m) { if (m) remote[m[0]] = new Date(m[1]).getTime() })
 
+    plan = opts.planner(remote, all)
+
+    doPush(function (err) {
+      if (err) return cb(err)
+      pushed = true
+      if (pulled && pushed) cb(null, pulled, { pull: plan.pull.length, pulled: pulled.length, push: plan.push.length })
+    })
+    doPull(function (err, recv) {
+      if (err) return cb(err)
+      pulled = recv || []
+      if (pulled && pushed) cb(null, pulled, { pull: plan.pull.length, pulled: pulled.length, push: plan.push.length })
+    })
+  })
+
+  function planner (remote, all) {
+    var push = []
+    var pull = []
     Object.keys(all).forEach(function (k) {
       var item = all[k]
       var mtime = item._mtime.getTime()
@@ -23,25 +45,16 @@ module.exports = function sync (API, name, all, params, cb) {
 
     pull = Object.keys(remote)
 
-    doPush(function (err) {
-      if (err) return cb(err)
-      pushed = true
-      if (pulled && pushed) cb(null, pulled, { pull: pull.length, pulled: pulled.length, push: push.length })
-    })
-    doPull(function (err, recv) {
-      if (err) return cb(err)
-      pulled = recv || []
-      if (pulled && pushed) cb(null, pulled, { pull: pull.length, pulled: pulled.length, push: push.length })
-    })
-  })
+    return { push: push, pull: pull }
+  }
 
   function doPush (cb) {
-    if (!push.length) return cb()
-    API.request('datastorePut', { collection: name, changes: push }, cb)
+    if (!plan.push.length) return cb()
+    API.request('datastorePut', { collection: name, changes: plan.push }, cb)
   }
 
   function doPull (cb) {
-    if (!pull.length) return cb()
-    API.request('datastoreGet', { collection: name, ids: pull }, cb)
+    if (!plan.pull.length) return cb()
+    API.request('datastoreGet', { collection: name, ids: plan.pull }, cb)
   }
 }
