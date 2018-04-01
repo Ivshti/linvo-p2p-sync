@@ -1,6 +1,6 @@
 {
   "name": "linvo-p2p-sync",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Syncing between a key-value store and the Linvo API ",
   "main": "sync.js",
   "devDependencies": {
